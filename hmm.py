@@ -117,7 +117,7 @@ class BrownCorpus:
         n = len(sentence)
         y = {}
         for k in range(1, n + 1):
-            print ('k: ', k)
+            print('k: ', k)
             word = self.get_word(sentence, k - 1)
             for u in self.get_tags(k - 1):
                 for v in self.get_tags(k):
@@ -148,7 +148,7 @@ class BrownCorpus:
             if line == fkey.readline():
                 correct += 1
         fkey.close()
-        print ('tag accuracy: ', float(correct) / n)
+        print('tag accuracy: ', float(correct) / n)
 
     def test_tag_sequence(self, testFileName, outFileName):
         start_time = time.time()
@@ -161,9 +161,9 @@ class BrownCorpus:
             if line == 'STOP':
                 if sentence:
                     # sentence.append(line)
-                    print sentence
+                    print(sentence)
                     path = self.get_tag_sequence(sentence)
-                    print path
+                    print(path)
                     for i in range(len(sentence)):
                         fout.write(sentence[i] + '\t' + path[i + 1] + '\n')
                     sentence = []
