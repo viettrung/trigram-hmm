@@ -1,1 +1,22 @@
 TODO: lists the members of your group and their corresponding contribution to this assignment
+
+Member list:
+ - Dương Việt Trung
+ - Võ Ngọc Lưu
+ - Vũ Anh Đức
+
+Contribution:
+ - Dương Việt Trung:
+   + Research and discuss with other members about HMM
+   + Implement base of tool use python
+   + Improve code
+  
+ - Võ Ngọc Lưu:
+   + Research and discuss with other members about HMM
+   + Implement test accuracy
+   + Improve code
+   
+ - Vũ Anh Đức
+   + Research and discuss with other members about HMM
+   + Improve code
+   + Work with documents
