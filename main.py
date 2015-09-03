@@ -5,11 +5,13 @@ s = time.time()
 
 hmm = BrownCorpus()
 
-sentence = "Ask jail deputies"
+# sentence = "Hello world. My name is John."
 
-y = hmm.get_tag_sequence(sentence.split())
+# y = hmm.get_tag_sequence(sentence.split())
+hmm.test_tag_sequence('test','test_result')
+hmm.test_accuracy('test_result');
 
-print(y)
+# print(y)
 
 e = time.time()
 
