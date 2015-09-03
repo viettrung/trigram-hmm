@@ -5,7 +5,7 @@ s = time.time()
 
 hmm = BrownCorpus()
 
-# sentence = "Hello world. My name is John."
+# sentence = "Hello world. My name is luu."
 
 # y = hmm.get_tag_sequence(sentence.split())
 hmm.test_tag_sequence('test','test_result')

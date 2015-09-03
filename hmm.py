@@ -74,7 +74,8 @@ class BrownCorpus:
 
                                     else:
                                         self.test += word + '\n'
-                                        self.test_tag += word + '\t' + tag + '\n'
+                                        if word != 'STOP':
+                                            self.test_tag += word + '\t' + tag + '\n'
 
                         corpus_file.close()
 
@@ -159,7 +160,7 @@ class BrownCorpus:
             line = line.strip()
             if line == 'STOP':
                 if sentence:
-                    sentence.append(line)
+                    # sentence.append(line)
                     print sentence
                     path = self.get_tag_sequence(sentence)
                     print path
