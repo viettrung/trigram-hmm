@@ -1,7 +1,8 @@
 # We used the first 490 Brown corpus files to train, and the rest 10 files are used to evaluate the accuracy.
 
 Result:
--
+Version 1:
+('tag accuracy: ', 0.6054347826086957)
 
 
 The reasons will explain why we couldn't get a higher accuracy:
