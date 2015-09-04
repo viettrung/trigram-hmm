@@ -1,7 +1,7 @@
 # We used the first 490 Brown corpus files to train, and the rest 10 files are used to evaluate the accuracy.
 
 Result:
-Version 1:
+Version 1 (All sentences with unknown words fail)
 ('tag accuracy: ', 0.6054347826086957)
 
 
