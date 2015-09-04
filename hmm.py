@@ -21,6 +21,7 @@ class BrownCorpus:
     bigram_tag_dict = {}
     trigram_tag_dict = {}
     distinct_tags = []
+    all_words = []
 
     test = ''
     test_tag = ''
@@ -72,10 +73,13 @@ class BrownCorpus:
                                         penult_tag = last_tag
                                         last_tag = tag
 
-                                    else:
+                                    elif len(line.split()) > 2 and len(line.split()) <= 11:
                                         self.test += word + '\n'
                                         if word != 'STOP':
                                             self.test_tag += word + '\t' + tag + '\n'
+
+                                    else:
+                                        break
 
                         corpus_file.close()
 
@@ -89,7 +93,20 @@ class BrownCorpus:
             save_test_data(self.test, FILE_TEST)
             save_test_data(self.test_tag, FILE_TEST_TAG_ORIGIN)
 
+        self.process_low_frequency_word()
         self.distinct_tags = set(self.unigram_tag_dict.keys())
+        self.all_words = set([key[0] for key in self.word_tag_dict.keys()])
+
+    def process_low_frequency_word(self):
+        new = {}
+        # change words with freq <5 into unknown words "<unkown>"
+        for (word, tag) in self.word_tag_dict:
+            new[word, tag] = self.word_tag_dict[word, tag]
+            if self.word_tag_dict[word, tag] < 5:
+                if ('<unkown>', tag) not in new:
+                    new['<unkown>', tag] = 0
+                new['<unkown>', tag] += self.word_tag_dict[word, tag]
+        self.word_tag_dict = new
 
     def get_e(self, word, tag):
         if (word, tag) in self.word_tag_dict:
@@ -119,6 +136,8 @@ class BrownCorpus:
         for k in range(1, n + 1):
             print ('k: ', k)
             word = self.get_word(sentence, k - 1)
+            if word not in self.all_words:
+                word = '<unkown>'
             for u in self.get_tags(k - 1):
                 for v in self.get_tags(k):
                     pi[k, u, v], bp[k, u, v] = max(
