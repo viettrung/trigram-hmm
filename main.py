@@ -1,18 +1,29 @@
 from hmm import BrownCorpus
+import re
 import time
 
-s = time.time()
+
+def get_user_input():
+    return re.sub(r"([\.,?])", r" \1 ", input("\033[95mEnter your sentence ('stop' to exit): \033[0m"))
+
+start_time = time.time()
 
 hmm = BrownCorpus()
 
-# sentence = "Hello world. My name is luu."
+end_time = time.time()
+print('(time to initialize BrownCorpus: %s)' % (end_time - start_time))
 
-# y = hmm.get_tag_sequence(sentence.split())
-hmm.test_tag_sequence('test','test_result')
-hmm.test_accuracy('test_result');
+user_input = get_user_input()
+while user_input != 'stop':
+    start_time = time.time()
+    sentence = user_input.split()
 
-# print(y)
+    y = hmm.get_tag_sequence(sentence)
 
-e = time.time()
+    end_time = time.time()
+    print("==> The best tag sequence is:", y)
+    print('(time to tag this sentence: %s)' % (end_time - start_time))
 
-print('elapsed time:', e-s)
+    user_input = get_user_input()
+
+

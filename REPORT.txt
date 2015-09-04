@@ -1,0 +1,12 @@
+# We used the first 490 Brown corpus files to train, and the rest 10 files are used to evaluate the accuracy.
+
+Result:
+-
+
+
+The reasons will explain why we couldn't get a higher accuracy:
+
+- By the time we generate the test report, we haven't deal with the unknown words (those words that are not exist in the
+trained files), that's why many sentences failed to return a correct tag sequence.
+
+- We also realized that a sentence that includes only 1 word (e.g: 'Ambiguity') would lead to error.
