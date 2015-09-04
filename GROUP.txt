@@ -1,4 +1,4 @@
-TODO: lists the members of your group and their corresponding contribution to this assignment
+# This file lists all the members of our group and their corresponding contribution to this assignment.
 
 Member list:
  - Dương Việt Trung
@@ -8,7 +8,7 @@ Member list:
 Contribution:
  - Dương Việt Trung:
    + Research and discuss with other members about HMM
-   + Implement base of tool use python
+   + Implement base of tool using python
    + Improve code
   
  - Võ Ngọc Lưu:

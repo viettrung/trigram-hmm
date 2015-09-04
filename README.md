@@ -3,32 +3,10 @@ This is an implementation of a second-order HMM
 
 How to use:
 
-1. Download and extract Brown Corpus (More information: https://en.wikipedia.org/wiki/Brown_Corpus)
-2. Checkout code from github (https://github.com/viettrung/trigram-hmm/)
-3. Go to directory of folder checkout from github
-4. Run file with python3: 
- - python3 ./main.py
-5. Wait for result.
-
-Note: Sentence with new word (not include in Brown Corpus) the result will be wrong 
---> need care about new word case.
-
-Sample data: 
-
-['I', "wouldn't", 'have', 'missed', 'it', 'for', 'anything', '.']
-k:  1
-k:  2
-k:  3
-k:  4
-k:  5
-k:  6
-k:  7
-k:  8
-{1: 'ppss', 2: 'md*', 3: 'hv', 4: 'vbn', 5: 'ppo', 6: 'in', 7: 'pn', 8: '.'}
-
-['``', 'O', '!', '!']
-k:  1
-k:  2
-k:  3
-k:  4
-{1: '``', 2: 'uh', 3: '.', 4: '.'}
+1. Download the Brown Corpus (https://en.wikipedia.org/wiki/Brown_Corpus): http://www.nltk.org/nltk_data/packages/corpora/brown.zip
+2. Checkout project from Github: https://github.com/viettrung/trigram-hmm/
+3. Place the extracted Brown Corpus in the root folder of the project
+4. Execute the following files with python3: 
+ - main.py ==> it will find the best tag sequence for a sentence that you entered.
+ - test.py ==> it will generate a test result and evaluate the accuracy of this program.
+5. Wait for the result.
