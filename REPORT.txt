@@ -1,1 +1,8 @@
 TODO: The accuracy of your tagger on the Brown corpus.
+
+Result:
+- 
+
+Some case maybe wrong, we still improve our code.
+- When sentence only have 1 word --> app crash.
+- When sentence have a word is not exist in the training data --> result will be wrong (result return max tag for all words)
