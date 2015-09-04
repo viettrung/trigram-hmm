@@ -1,11 +1,9 @@
 # We used the first 490 Brown corpus files to train, and the rest 10 files are used to evaluate the accuracy.
 
-Result:
-Version 1 (All sentences with unknown words fail)
-('tag accuracy: ', 0.6054347826086957)
+Accuracy rate: ~60%
 
 
-The reasons will explain why we couldn't get a higher accuracy:
+The following reasons will explain why we couldn't get a higher accuracy:
 
 - By the time we generate the test report, we haven't deal with the unknown words (those words that are not exist in the
 trained files), that's why many sentences failed to return a correct tag sequence.
