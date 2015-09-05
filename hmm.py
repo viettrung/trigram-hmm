@@ -11,9 +11,13 @@ WORD_TAG = 'word_tag'
 UNIGRAM = 'unigram'
 BIGRAM = 'bigram'
 TRIGRAM = 'trigram'
-
+POSSIBLE_TAGS = "possible_tags"
 FILE_TEST_TAG_ORIGIN = 'test_tag_origin'
 FILE_TEST = 'test'
+
+LAMDA_1 = 0.2
+LAMDA_2 = 0.4
+LAMDA_3 = 0.4
 
 
 class BrownCorpus:
@@ -22,6 +26,7 @@ class BrownCorpus:
     unigram_tag_dict = {}
     bigram_tag_dict = {}
     trigram_tag_dict = {}
+    possible_tags_dict = {}
     distinct_tags = []
 
     test = ''
@@ -35,6 +40,7 @@ class BrownCorpus:
             self.unigram_tag_dict = get_trained_data(UNIGRAM)
             self.bigram_tag_dict = get_trained_data(BIGRAM)
             self.trigram_tag_dict = get_trained_data(TRIGRAM)
+            self.possible_tags_dict = get_trained_data(POSSIBLE_TAGS)
         else:
             list_of_filename = os.listdir(BROWN_CORPUS_DIR)
             count_file = 0
@@ -52,6 +58,11 @@ class BrownCorpus:
                                     word, tag = word_tag.rsplit('/', 1)
 
                                     if count_file <= 490:
+
+                                        if word in self.possible_tags_dict:
+                                            self.possible_tags_dict[word].add(tag)
+                                        else:
+                                            self.possible_tags_dict[word] = {tag}
 
                                         if word in self.word_dict:
                                             self.word_dict[word] += 1
@@ -81,7 +92,7 @@ class BrownCorpus:
                                         penult_tag = last_tag
                                         last_tag = tag
 
-                                    elif len(line.split()) > 2 and len(line.split()) <= 11:
+                                    elif len(line.split()) > 2:
                                         self.test += word + '\n'
                                         if word != 'STOP':
                                             self.test_tag += word + '\t' + tag + '\n'
@@ -97,6 +108,7 @@ class BrownCorpus:
             save_trained_data(self.unigram_tag_dict, UNIGRAM)
             save_trained_data(self.bigram_tag_dict, BIGRAM)
             save_trained_data(self.trigram_tag_dict, TRIGRAM)
+            save_trained_data(self.possible_tags_dict, POSSIBLE_TAGS)
 
             os.makedirs(TEST_DIR)
             save_test_data(self.test, FILE_TEST)
@@ -107,14 +119,20 @@ class BrownCorpus:
 
     def process_low_frequency_word(self):
         new = {}
+        possible_tags_dict = {}
         # change words with freq <5 into unknown words "<unkown>"
         for (word, tag) in self.word_tag_dict:
             new[word, tag] = self.word_tag_dict[word, tag]
+            possible_tags_dict[word] = self.possible_tags_dict[word]
             if self.word_tag_dict[word, tag] < 5:
                 if ('<unkown>', tag) not in new:
                     new['<unkown>', tag] = 0
                 new['<unkown>', tag] += self.word_tag_dict[word, tag]
+                if '<unkown>' not in self.possible_tags_dict:
+                    possible_tags_dict['<unkown>'] = {tag}
+                possible_tags_dict['<unkown>'] = self.possible_tags_dict[word]
         self.word_tag_dict = new
+        self.possible_tags_dict = possible_tags_dict
 
     def get_e(self, word, tag):
         if (word, tag) in self.word_tag_dict:
@@ -123,19 +141,33 @@ class BrownCorpus:
             return 0.0
 
     def get_q(self, penult_tag, last_tag, current_tag):
-        if (penult_tag, last_tag, current_tag) in self.trigram_tag_dict:
-            return float(self.trigram_tag_dict[penult_tag, last_tag, current_tag]) / self.bigram_tag_dict[last_tag, current_tag]
+        # if (penult_tag, last_tag, current_tag) in self.trigram_tag_dict:
+        #     return float(self.trigram_tag_dict[penult_tag, last_tag, current_tag]) / self.bigram_tag_dict[last_tag, current_tag]
+        if (penult_tag, last_tag, current_tag) in self.trigram_tag_dict and (
+                penult_tag, last_tag) in self.bigram_tag_dict:
+            value_1 = LAMDA_1 * float(self.trigram_tag_dict[penult_tag, last_tag, current_tag]) / \
+                      self.bigram_tag_dict[penult_tag, last_tag]
         else:
-            return 0.0
+            value_1 = 0.0
 
-    def get_word(self, sentence, k):
-        if k < 0:
-            return ''
+        if (last_tag, current_tag) in self.bigram_tag_dict and last_tag in self.unigram_tag_dict:
+            value_2 = LAMDA_2 * float(self.bigram_tag_dict[last_tag, current_tag]) / \
+                      self.unigram_tag_dict[last_tag]
         else:
-            return sentence[k]
+            value_2 = 0.0
+
+        if current_tag in self.unigram_tag_dict:
+            value_3 = LAMDA_3 * float(self.unigram_tag_dict[current_tag]) / \
+                      len(self.unigram_tag_dict)
+        else:
+            value_3 = 0.0
+
+        return value_1 + value_2 + value_3
+        # else:
+        #     return 0.0
 
     def get_tag_sequence(self, sentence):
-        print('start tagging...')
+        print('tagging...')
         pi = {}
         pi[0, '', ''] = 1
         bp = {}
@@ -143,24 +175,39 @@ class BrownCorpus:
         y = {}
         for k in range(1, n + 1):
             word = self.get_word(sentence, k - 1)
-            if word not in self.word_dict:
-                word = '<unkown>'
-            for u in self.get_tags(k - 1):
-                for v in self.get_tags(k):
-                    pi[k, u, v], bp[k, u, v] = max([(pi[k - 1, w, u] * self.get_q(w, u, v) * self.get_e(word, v), w) for w in self.get_tags(k - 2)])
+            last_word = self.get_word(sentence, k - 2)
+            penult_word = self.get_word(sentence, k - 3)
 
-        prob, y[n - 1], y[n] = max([(pi[n, u, v] * self.get_q(u, v, 'STOP'), u, v) for u in self.distinct_tags for v in self.distinct_tags])
+            for u in self.get_tags(k - 1, last_word):
+                for v in self.get_tags(k, word):
+                    pi[k, u, v], bp[k, u, v] = max(
+                        [(pi[k - 1, w, u] * self.get_q(w, u, v) * self.get_e(word, v), w) for w in
+                         self.get_tags(k - 2, penult_word)])
+
+        v_tags = self.possible_tags_dict[self.get_word(sentence, n - 1)]
+        u_tags = self.possible_tags_dict[self.get_word(sentence, n - 2)]
+
+        prob, y[n - 1], y[n] = max([(pi[n, u, v] * self.get_q(u, v, 'STOP'), u, v) for u in u_tags for v in v_tags])
 
         for k in range(n - 2, 0, -1):
             y[k] = bp[k + 2, y[k + 1], y[k + 2]]
 
         return y
 
-    def get_tags(self, k):
+    def get_word(self, sentence, k):
+        if k < 0:
+            return ''
+        else:
+            if sentence[k] not in self.word_dict:
+                print("\033[93m <Warning: '%s' is not exist in the training data> \033[0m" % sentence[k])
+                return '<unkown>'
+            return sentence[k]
+
+    def get_tags(self, k, word):
         if k in [0, -1]:
             return set([''])
         else:
-            return self.distinct_tags
+            return self.possible_tags_dict[word]
 
     def test_accuracy(self, test_result):
         correct = 0
