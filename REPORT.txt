@@ -9,3 +9,6 @@ The following reasons will explain why we couldn't get a higher accuracy:
 trained files), that's why many sentences failed to return a correct tag sequence.
 
 - We also realized that a sentence that includes only 1 word (e.g: 'Ambiguity') would lead to error.
+
+# After update with processing low frequence word.
+Accuracy rate: 84.4311377245509 %
