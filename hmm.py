@@ -94,8 +94,8 @@ class BrownCorpus:
 
                                     else:
                                         self.test += word + '\n'
-                                        if word != 'STOP':
-                                            self.test_tag += word + '\t' + tag + '\n'
+                                        # if word != 'STOP':
+                                        self.test_tag += word + '\t' + tag + '\n'
 
                         corpus_file.close()
 
@@ -211,13 +211,31 @@ class BrownCorpus:
     def test_accuracy(self, test_result):
         correct = 0
         n = 0
+        num_senten = 0
+        senten_correct = 0
+        tag_word_in_senten_correct = 0
+        word_in_senten = 0
+
         fkey = open(TEST_DIR + '/' + FILE_TEST_TAG_ORIGIN, 'r')
         for line in open(TEST_DIR + '/' + test_result, 'r'):
+            word_in_senten += 1
             n += 1
             if line == fkey.readline():
+                tag_word_in_senten_correct += 1
                 correct += 1
+            if 'STOP' in line:
+                num_senten += 1
+                if tag_word_in_senten_correct == word_in_senten:
+                    senten_correct += 1
+                word_in_senten = 0
+                tag_word_in_senten_correct = 0
+
         fkey.close()
-        print('tag accuracy: ', float(correct) / n)
+        print('number of words in dictionary: ', len(self.word_dict))
+        print('number of tags in dictionary: ', len(self.distinct_tags))
+        print('number of testing sentences: ', num_senten)
+        print('sentences tag accuracy: ', float(senten_correct) / num_senten)
+        print('all tag accuracy: ', float(correct) / n)
 
     def test_tag_sequence(self, testFileName, outFileName):
         start_time = time.time()
@@ -229,7 +247,7 @@ class BrownCorpus:
             line = line.strip()
             if line == 'STOP':
                 if sentence:
-                    # sentence.append(line)
+                    sentence.append(line)
                     print(sentence)
                     path = self.get_tag_sequence(sentence)
                     print(path)
