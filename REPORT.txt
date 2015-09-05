@@ -2,7 +2,6 @@
 
 Accuracy rate: ~60%
 
-
 The following reasons will explain why we couldn't get a higher accuracy:
 
 - By the time we generate the test report, we haven't deal with the unknown words (those words that are not exist in the
@@ -13,7 +12,12 @@ trained files), that's why many sentences failed to return a correct tag sequenc
 # After update with processing low frequence word.
 Accuracy rate: 84.4311377245509 %
 
-# After improve performance and fix some bugs.
-time to execute test_tag_sequence method: 4.265070915222168
-tag accuracy:  0.8849711701995271
-elapsed time: 6.507781028747559
+# After improve performance, implement smooth linear technique and fix some bugs.
+Here's the final result of sequence tagging:
+('time to execute test_tag_sequence method:', 7.242999792098999)
+('number of words in dictionary: ', 55221)
+('number of tags in dictionary: ', 472)
+('number of testing sentences: ', 1203)
+('sentences tag accuracy: ', 19.451371571072318 %)
+('all tag accuracy: ', 89.04206991902034 %)
+('elapsed time:', 10.873999834060669)
