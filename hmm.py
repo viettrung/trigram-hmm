@@ -184,10 +184,12 @@ class BrownCorpus:
                         [(pi[k - 1, w, u] * self.get_q(w, u, v) * self.get_e(word, v), w) for w in
                          self.get_tags(k - 2, penult_word)])
 
-        v_tags = self.possible_tags_dict[self.get_word(sentence, n - 1)]
-        u_tags = self.possible_tags_dict[self.get_word(sentence, n - 2)]
-
-        prob, y[n - 1], y[n] = max([(pi[n, u, v] * self.get_q(u, v, 'STOP'), u, v) for u in u_tags for v in v_tags])
+        if n == 1:
+            prob, y[n] = max([(self.get_q(u, v, 'STOP'), v)])
+        else:
+            v_tags = self.possible_tags_dict[self.get_word(sentence, n - 1)]
+            u_tags = self.possible_tags_dict[self.get_word(sentence, n - 2)]
+            prob, y[n - 1], y[n] = max([(pi[n, u, v] * self.get_q(u, v, 'STOP'), u, v) for u in u_tags for v in v_tags])
 
         for k in range(n - 2, 0, -1):
             y[k] = bp[k + 2, y[k + 1], y[k + 2]]
