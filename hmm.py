@@ -92,13 +92,10 @@ class BrownCorpus:
                                         penult_tag = last_tag
                                         last_tag = tag
 
-                                    elif len(line.split()) > 2:
+                                    else:
                                         self.test += word + '\n'
                                         if word != 'STOP':
                                             self.test_tag += word + '\t' + tag + '\n'
-
-                                    else:
-                                        break
 
                         corpus_file.close()
 
