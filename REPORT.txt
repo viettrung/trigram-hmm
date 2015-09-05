@@ -12,3 +12,8 @@ trained files), that's why many sentences failed to return a correct tag sequenc
 
 # After update with processing low frequence word.
 Accuracy rate: 84.4311377245509 %
+
+# After improve performance and fix some bugs.
+time to execute test_tag_sequence method: 4.265070915222168
+tag accuracy:  0.8849711701995271
+elapsed time: 6.507781028747559
