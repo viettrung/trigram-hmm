@@ -21,8 +21,12 @@ while user_input != 'stop':
     y = hmm.get_tag_sequence(sentence)
 
     end_time = time.time()
-    print("==> The best tag sequence is:", y)
-    print('(time to tag this sentence: %s)' % (end_time - start_time))
+    
+    if y == '':
+        print("Please input text and retry")
+    else:
+        print("==> The best tag sequence is:", y)
+        print('(time to tag this sentence: %s)' % (end_time - start_time))
 
     user_input = get_user_input()
 

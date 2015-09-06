@@ -164,12 +164,15 @@ class BrownCorpus:
         #     return 0.0
 
     def get_tag_sequence(self, sentence):
+        n = len(sentence)
+        if n == 0:
+            return '';
         print('tagging...')
         pi = {}
         pi[0, '', ''] = 1
         bp = {}
-        n = len(sentence)
         y = {}
+        
         for k in range(1, n + 1):
             word = self.get_word(sentence, k - 1)
             last_word = self.get_word(sentence, k - 2)
@@ -231,11 +234,15 @@ class BrownCorpus:
                 tag_word_in_senten_correct = 0
 
         fkey.close()
-        print('number of words in dictionary: ', len(self.word_dict))
-        print('number of tags in dictionary: ', len(self.distinct_tags))
-        print('number of testing sentences: ', num_senten)
-        print('sentences tag accuracy: ', float(senten_correct) / num_senten)
-        print('all tag accuracy: ', float(correct) / n)
+        print('Number of words in dictionary: ', len(self.word_dict))
+        print('Number of tags in dictionary: ', len(self.distinct_tags))
+        print('----------TEST-----------')
+        print('Number of testing sentences: ', num_senten)
+        print('Number of correct sentences: ', senten_correct)
+        print('==> Sentences tag accuracy: ', float(senten_correct) / num_senten)
+        print('Number of word to test: ', correct)
+        print('Number of correct word: ', n)
+        print('==> All tag accuracy: ', float(correct) / n)
 
     def test_tag_sequence(self, testFileName, outFileName):
         start_time = time.time()
